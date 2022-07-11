@@ -1,23 +1,31 @@
 package main
 
 import (
-	"encoding/json"
-	"net/http"
-	"math/rand"
-	"time"
-	"fmt"
-
+"encoding/json"
+"fmt"
+"math/rand"
+"net/http"
+"os"
+"time"
 )
 
 func main(){
-  var b []byte
-	
+  var(
+    port string = os.Getenv("PORT")
+    b    []byte
+  )
+
+  if port == "" {
+    port = "8080"
+  }
+
   http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
     rand.Seed(time.Now().UnixNano())
     b, _ = json.Marshal(Quotes[rand.Intn( len(Quotes) )])
     fmt.Fprintf(w, string(b))
   })
 
-	http.ListenAndServe(":8080", nil)
+  fmt.Println("Server running on port", port)
+  http.ListenAndServe(":" + port, nil)
 }
 
