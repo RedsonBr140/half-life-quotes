@@ -12,6 +12,4 @@ hl-api
 *.out
 
 # Dependency directories (remove the comment below to include it)
-vendor/
-# Take care with this thing above
-.env
+# vendor/
