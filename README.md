@@ -1,5 +1,9 @@
-# Half-Life quotes API
-A (very) simple API to retrieve some quotes of Half Life.
+<img src="docs/demo.gif" alt="Demo GIF." align="center"/>
+<h1 align=center>Half-Life quotes API</h1>
+<p align=center>A (very) simple API to retrieve some quotes of Half Life.</p>
+
+## Production host
+http://half-life-api.herokuapp.com/
 
 ## API
 
