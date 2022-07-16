@@ -19,6 +19,8 @@ var Quotes = []quote{
 	{"Minor fracture detected.", "HEV Suit"},
 	{"Morphine administered.", "HEV Suit"},
 	{"", "Gordon Freeman"},
+	{"I didn't sign on for this shit.", "Random soldier"},
+	{"We've got hostiles!", "Random soldier"},
 /*
 	{"", "HEV Suit"},
 	{"", "HEV Suit"},
