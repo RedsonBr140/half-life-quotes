@@ -11,12 +11,43 @@ http://half-life-api.herokuapp.com/
 
 Get a random quote in this format:
 > https://half-life-api.herokuapp.com/
-
 ```json
-{
-  "quote":"Welcome to the HEV Mark 4 Protective System, for use in hazardous environment conditions.",
-  "author":"HEV Suit"
-}
+[
+  {
+    "quote":"Welcome to the HEV Mark 4 Protective System, for use in hazardous environment conditions.",
+    "author":"HEV Suit"
+  }
+]
+```
+
+
+`GET /{number}`
+
+return an array with `{number}` quotes.
+> https://half-life-api.herokuapp.com/5
+```json
+[
+  {
+    "quote": "",
+    "author": "Gordon Freeman"
+  },
+  {
+    "quote": "Communications interface online.",
+    "author": "HEV Suit"
+  },
+  {
+    "quote": "Defensive weapon selection system activated.",
+    "author": "HEV Suit"
+  },
+  {
+    "quote": "Communications interface online.",
+    "author": "HEV Suit"
+  },
+  {
+    "quote": "Minor fracture detected.",
+    "author": "HEV Suit"
+  }
+]
 ```
 
 ## Docker
