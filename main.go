@@ -1,32 +1,62 @@
 package main
 
 import (
-"encoding/json"
-"fmt"
-"math/rand"
-"net/http"
-"os"
-"time"
+  "encoding/json"
+  "fmt"
+  "time"
+  "log"
+  "math/rand"
+  "net/http"
+  "strconv"
+  "os"
+
+  "github.com/gorilla/mux"
 )
 
-func main(){
-  var(
-    port string = os.Getenv("PORT")
-    b    []byte
+func GetRandomQuote(quotesNumber int) []quote {
+  var limit int
+  var (
+    output      []quote
+    randomquote quote
   )
 
+  if quotesNumber > len(Quotes) {
+    limit = len(Quotes)
+  } else {
+    limit = quotesNumber
+  }
+
+  rand.Seed(time.Now().UnixNano())
+  for i:=0;i<limit;i++ {
+    randomquote = Quotes[rand.Intn(len(Quotes))]
+    output = append(output, randomquote)
+  }
+  return output
+}
+
+func jsonQuotesHandler(w http.ResponseWriter,r *http.Request) {
+  w.Header().Set("Access-Control-Allow-Origin", "*")
+  vars := mux.Vars(r)
+  // Converting string to int so we can compare
+  number, _ := strconv.Atoi(vars["quotes"])
+  if number == 0 {
+    number = 1
+  }
+
+  json, _ := json.Marshal(GetRandomQuote(number))
+  fmt.Fprintf(w, string(json))
+}
+
+func main(){
+  port := os.Getenv("PORT")
   if port == "" {
     port = "8080"
   }
 
-  http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-    w.Header().Set("Access-Control-Allow-Origin", "*")
-    rand.Seed(time.Now().UnixNano())
-    b, _ = json.Marshal(Quotes[rand.Intn( len(Quotes) )])
-    fmt.Fprintf(w, string(b))
-  })
-
+  r := mux.NewRouter()
+  r.HandleFunc("/", jsonQuotesHandler)
+  r.HandleFunc("/{quotes}", jsonQuotesHandler).Methods("GET")
   fmt.Println("Server running on port", port)
-  http.ListenAndServe(":" + port, nil)
+  log.Fatal(http.ListenAndServe(":" + port, r))
 }
 
