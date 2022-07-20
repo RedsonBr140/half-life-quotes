@@ -3,7 +3,7 @@ PROJ_NAME=hl-api
 all: build
 
 build:
-	go build -o $(PROJ_NAME) .
+	go build -o $(PROJ_NAME) -ldflags '-s -w' .
 
 clean:
 	rm -rf $(PROJ_NAME)
