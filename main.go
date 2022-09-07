@@ -1,16 +1,14 @@
 package main
 
 import (
-	"encoding/json"
-	"fmt"
-	"log"
 	"math/rand"
 	"net/http"
 	"os"
 	"strconv"
 	"time"
 
-	"github.com/gorilla/mux"
+	"github.com/gin-contrib/cors"
+	"github.com/gin-gonic/gin"
 )
 
 func GetRandomQuote(quotesNumber int) []quote {
@@ -34,17 +32,29 @@ func GetRandomQuote(quotesNumber int) []quote {
 	return output
 }
 
-func jsonQuotesHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	vars := mux.Vars(r)
-	// Converting string to int so we can compare
-	number, _ := strconv.Atoi(vars["quotes"])
-	if number == 0 {
+func jsonQuotesHandler(ctx *gin.Context) {
+	param := ctx.Params.ByName("number")
+	// converting from string to int
+	number, _ := strconv.Atoi(param)
+	if number <= 0 {
 		number = 1
 	}
 
-	json, _ := json.Marshal(GetRandomQuote(number))
-	fmt.Fprintf(w, string(json))
+	ctx.JSON(http.StatusOK, GetRandomQuote(number))
+
+}
+
+func setupRouter() *gin.Engine {
+	r := gin.Default()
+	r.Use(cors.New(cors.Config{
+		AllowMethods:    []string{"GET"},
+		AllowAllOrigins: true,
+		MaxAge:          20 * time.Minute,
+	}))
+
+	r.GET("/", jsonQuotesHandler)
+	r.GET("/:number", jsonQuotesHandler)
+	return r
 }
 
 func main() {
@@ -53,9 +63,6 @@ func main() {
 		port = "8080"
 	}
 
-	r := mux.NewRouter()
-	r.HandleFunc("/", jsonQuotesHandler)
-	r.HandleFunc("/{quotes}", jsonQuotesHandler).Methods("GET")
-	fmt.Println("Server running on port", port)
-	log.Fatal(http.ListenAndServe(":"+port, r))
+	r := setupRouter()
+	r.Run(":" + port)
 }
