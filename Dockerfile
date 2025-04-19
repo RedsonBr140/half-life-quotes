@@ -1,4 +1,4 @@
-FROM golang:1.19-rc-alpine3.15
+FROM golang:latest
 RUN mkdir /app
 
 COPY . /app
